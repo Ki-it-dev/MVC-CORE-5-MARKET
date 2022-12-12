@@ -1,0 +1,72 @@
+﻿@model WebMarket.Models.Role
+
+@{
+    ViewData["Title"] = "Thông tin quyền truy cập";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-action="Index" asp-area="Admin" asp-controller="Home" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a asp-action="Index" asp-area="Admin" asp-controller="AdminRoles" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Danh sách quyền truy cập</a>
+            <span class="breadcrumb-item active">@ViewData["Title"]</span>
+        </nav>
+    </div>
+</div>
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="product-info-table m-t-20">
+            <tbody>
+                <tr>
+                    <td>ID:</td>
+                    <td class="text-dark font-weight-semibold">@Model.RoleId</td>
+                </tr>
+                <tr>
+                    <td>Tên quyền:</td>
+                    <td>@Model.RoleName</td>
+                </tr>
+                <tr>
+                    <td>Mô tả:</td>
+                    <td>@Model.Description</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a class="btn btn-info m-r-5"
+                            asp-action="Edit" asp-route-id="@Model.RoleId"
+                                >Sửa</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary m-r-5" asp-action="Index">Quay lại</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@*<h1>Details</h1>
+
+    <div>
+        <h4>Role</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.RoleName)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.RoleName)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.RoleId">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@

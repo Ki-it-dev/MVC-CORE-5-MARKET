@@ -1,0 +1,34 @@
+﻿@model WebMarket.Models.Role
+
+@{
+    ViewData["Title"] = "Thêm mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-action="Index" asp-area="Admin" asp-controller="Home" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item" asp-action="Index" asp-area="Admin" asp-controller="AdminRoles">Danh sách quyền truy cập</a>
+            <span class="breadcrumb-item active">@ViewData["Title"]</span>
+        </nav>
+    </div>
+</div>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group col-sm-6" style="padding-left:0">
+        <label asp-for="RoleName">Tên quyền</label>
+        <input type="text" class="form-control" placeholder="Tên quyền" asp-for="RoleName" />
+        <span asp-validation-for="RoleName" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-6" style="padding-left:0">
+        <label asp-for="Description">Mô tả</label>
+        <input type="text" class="form-control" placeholder="Mô tả" asp-for="Description">
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-6" style="padding-left:0">
+        <button type="submit" value="Create" class="btn btn-primary m-r-5">Thêm mới</button>
+        <a asp-action="Index" class="btn btn-primary">Quay lại</a>
+    </div>
+</form>

@@ -1,0 +1,124 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<WebMarket.Models.Page>
+
+@{
+    int CurrentPage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách các trang đã tạo";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index"
+               class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <span class="breadcrumb-item active">@ViewData["Title"] trang @CurrentPage</span>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <div class="d-md-flex">
+                    <div class="m-b-10 m-r-15">
+                        @*<select class="custom-select" id="idProducts" name="idProducts" style="min-width: 200px;"
+                                    asp-items="ViewBag.DanhMuc">
+                                <option disabled selected>Chọn sản phẩm</option>
+                                <option value="0">Chọn tất cả</option>
+                            </select>*@
+                    </div>
+                    @*<div class="m-b-10">
+                            <select class="custom-select" id="idStatus" name="idStatus" style="min-width: 200px;" asp-items="ViewBag.listTrangThai">
+                                <option value="" disabled selected>Chọn trạng thái</option>
+                            </select>
+                        </div>*@
+                </div>
+            </div>
+            <div class="col-lg-4 text-right">
+                <a asp-action="Create" asp-controller="AdminPages" asp-area="Admin"
+                   class="btn btn-primary">
+                    <i class="anticon anticon-plus-circle m-r-5"></i>
+                    <span>Thêm trang</span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover e-commerce-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="checkbox">
+                                <input id="checkAll" type="checkbox">
+                                <label for="checkAll" class="m-b-0"></label>
+                            </div>
+                        </th>
+                        <th>ID</th>
+                        <th>Tên trang</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="checkbox">
+                                        <input id="check-item-1" type="checkbox">
+                                        <label for="check-item-1" class="m-b-0"></label>
+                                    </div>
+                                </td>
+                                <td>
+                                    @item.PageId
+                                </td>
+                                <td>@item.PageName</td>
+                                <td>
+                                    @if (item.Published == true)
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-success badge-dot m-r-10"></div>
+                                            <div>Hoạt động</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge badge-danger badge-dot m-r-10"></div>
+                                            <div>Không hoạt động</div>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    <a asp-action="Details" asp-controller="AdminPages" asp-area="Admin" asp-route-id="@item.PageId"
+                                       class="btn btn-icon btn-hover btn-sm btn-rounded pull-right">
+                                        <i class="anticon anticon-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-controller="AdminPages" asp-area="Admin" asp-route-id="@item.PageId"
+                                       class="btn btn-icon btn-hover btn-sm btn-rounded pull-right">
+                                        <i class="anticon anticon-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-controller="AdminPages" asp-area="Admin" asp-route-id="@item.PageId"
+                                       class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                        <i class="anticon anticon-delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+            <div aria-label="Page navigation example">
+                <ul class="pagination">
+                    <pager class="page-container"
+                           list="@Model"
+                           asp-area="Admin" asp-controller="AdminPages" asp-action="Index">
+                    </pager>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
