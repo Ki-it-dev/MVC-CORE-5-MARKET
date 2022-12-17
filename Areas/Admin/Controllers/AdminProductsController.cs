@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PagedList.Core;
 using WebMarket.Models;
+using WebMarket.Helpper;
+using System.IO;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace WebMarket.Areas.Admin.Controllers
 {
@@ -14,14 +17,14 @@ namespace WebMarket.Areas.Admin.Controllers
     public class AdminProductsController : Controller
     {
         private readonly dbMarketsContext _context;
-
-        public AdminProductsController(dbMarketsContext context)
+        public INotyfService _notyfService { get; }
+        public AdminProductsController(dbMarketsContext context, INotyfService notyfService)
         {
             _context = context;
+            _notyfService = notyfService;
         }
-
         // GET: Admin/AdminProducts
-        public IActionResult Index(int? page,int catID)
+        public IActionResult Index(int? page, int catID)
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 20;
@@ -32,7 +35,7 @@ namespace WebMarket.Areas.Admin.Controllers
             {
                 lsProducts = _context.Products
                     .AsNoTracking()
-                    .Where(x=>x.CatId == catID)
+                    .Where(x => x.CatId == catID)
                     .Include(x => x.Cat)
                     .OrderByDescending(x => x.ProductId).ToList();
             }
@@ -43,7 +46,7 @@ namespace WebMarket.Areas.Admin.Controllers
                     .Include(x => x.Cat)
                     .OrderByDescending(x => x.ProductId).ToList();
             }
-             
+
 
             PagedList<Product> models = new PagedList<Product>(lsProducts.AsQueryable(), pageNumber, pageSize);
 
@@ -92,12 +95,30 @@ namespace WebMarket.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,MetaDesc,MetaKey,Alias,UnitslnStock")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,MetaDesc,MetaKey,Alias,UnitslnStock")] Product product
+            //File hinh anh
+            , Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (ModelState.IsValid)
             {
+                //Save img
+                product.ProductName = Utilities.ToTitleCase(product.ProductName);
+
+                if (fThumb != null)
+                {
+                    string extension = Path.GetExtension(fThumb.FileName);
+                    string img = Utilities.SEOUrl(product.ProductName) + extension;
+                    product.Thumb = await Utilities.UploadFile(fThumb, @"products", img.ToLower());
+                }
+                if (string.IsNullOrEmpty(product.Thumb)) product.Thumb = "default.jpg";
+
+                product.Alias = Utilities.SEOUrl(product.ProductName);
+                product.DateModified = DateTime.Now;
+                product.DateCreated = DateTime.Now;
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                _notyfService.Success("Tạo mới thành công");
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatName", product.CatId);
@@ -126,7 +147,8 @@ namespace WebMarket.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,MetaDesc,MetaKey,Alias,UnitslnStock")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Description,CatId,Price,Discount,Thumb,Video,DateCreated,DateModified,BestSellers,HomeFlag,Active,Tags,Title,MetaDesc,MetaKey,Alias,UnitslnStock")] Product product
+            , Microsoft.AspNetCore.Http.IFormFile fThumb)
         {
             if (id != product.ProductId)
             {
@@ -137,13 +159,29 @@ namespace WebMarket.Areas.Admin.Controllers
             {
                 try
                 {
+                    //Save img
+                    product.ProductName = Utilities.ToTitleCase(product.ProductName);
+
+                    if (fThumb != null)
+                    {
+                        string extension = Path.GetExtension(fThumb.FileName);
+                        string img = Utilities.SEOUrl(product.ProductName) + extension;
+                        product.Thumb = await Utilities.UploadFile(fThumb, @"products", img.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(product.Thumb)) product.Thumb = "default.jpg";
+
+                    product.Alias = Utilities.SEOUrl(product.ProductName);
+                    product.DateModified = DateTime.Now;
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+                    _notyfService.Success("Cập nhật thành công");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProductExists(product.ProductId))
                     {
+                        _notyfService.Error("Có lỗi xảy ra");
                         return NotFound();
                     }
                     else
@@ -184,6 +222,7 @@ namespace WebMarket.Areas.Admin.Controllers
             var product = await _context.Products.FindAsync(id);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+            _notyfService.Success("Xóa thành công");
             return RedirectToAction(nameof(Index));
         }
 

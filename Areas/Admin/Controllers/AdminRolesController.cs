@@ -14,7 +14,6 @@ namespace WebMarket.Areas.Admin.Controllers
     public class AdminRolesController : Controller
     {
         private readonly dbMarketsContext _context;
-
         public INotyfService _notyfService { get; }
         public AdminRolesController(dbMarketsContext context, INotyfService notyfService)
         {

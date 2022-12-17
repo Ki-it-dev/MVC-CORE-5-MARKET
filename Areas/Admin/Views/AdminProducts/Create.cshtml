@@ -1,7 +1,7 @@
 ﻿@model WebMarket.Models.Product
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm mới sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -10,13 +10,13 @@
     <div class="page-header no-gutters has-tab">
         <div class="d-md-flex m-b-15 align-items-center justify-content-between">
             <div class="media align-items-center m-b-15">
-                @*<div class="avatar avatar-image rounded" style="height: 70px; width: 70px">
-                        <img src="~/adminassets/images/others/thumb-16.jpg" alt="">
-                    </div>
-                    <div class="m-l-15">
-                        <h4 class="m-b-0">Skinny Men Blazer</h4>
-                        <p class="text-muted m-b-0">Code: #5325</p>
-                    </div>*@
+                <div class="header-sub-title">
+                    <nav class="breadcrumb breadcrumb-dash">
+                        <a asp-action="Index" asp-area="Admin" asp-controller="Home" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                        <a asp-action="Index" asp-area="Admin" asp-controller="AdminProducts" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Danh sách sản phẩm</a>
+                        <span class="breadcrumb-item active">@ViewData["Title"]</span>
+                    </nav>
+                </div>
             </div>
             <div class="m-b-15">
                 <button class="btn btn-primary">
@@ -46,6 +46,11 @@
                         <input type="text" class="form-control" asp-for="ProductName" placeholder="Tên sản phẩm">
                         <span asp-validation-for="ProductName" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="ShortDesc">Mô tả ngắn</label>
+                        <input type="text" class="form-control" asp-for="ShortDesc" placeholder="Mô tả ngắn">
+                        <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                    </div>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label class="font-weight-semibold" for="Price">Giá</label>
@@ -70,8 +75,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="font-weight-semibold" for="Price">Ảnh đại diện</label>
-                        <input type="file" class="form-control" asp-for="Thumb" placeholder="Ảnh đại diện">
+                        <label class="font-weight-semibold" for="Thumb">Ảnh đại diện</label>
+                        <input type="file" class="form-control" name="fThumb" asp-for="Thumb" placeholder="Ảnh đại diện">
                         <span asp-validation-for="Thumb" class="text-danger"></span>
                     </div>
                     <div class="row">
@@ -120,15 +125,18 @@
                         <input type="text" class="form-control" asp-for="MetaKey" />
                         <span asp-validation-for="MetaKey" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label class="font-weight-semibold" for="Tags">Tags</label>
+                        <input type="text" class="form-control" asp-for="Tags" />
+                        <span asp-validation-for="Tags" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="tab-pane fade" id="product-edit-description">
             <div class="card">
                 <div class="card-body">
-                    <div id="productDescription">
-                        <p>Special cloth alert. The key to more success is to have a lot of pillows. Surround yourself with angels, positive energy, beautiful people, beautiful souls, clean heart, angel. They will try to close the door on you, just open it. A major key, never panic. Don’t panic, when it gets crazy and rough, don’t panic, stay calm. They key is to have every key, the key to open every door.The other day the grass was brown, now it’s green because I ain’t give up. Never surrender. Lion! I’m up to something. Always remember in the jungle there’s a lot of they in there, after you overcome they, you will make it to paradise.</p>
-                    </div>
+                    <textarea asp-for="Description"></textarea>
                 </div>
             </div>
         </div>
